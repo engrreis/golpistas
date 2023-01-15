@@ -15,8 +15,6 @@ desmembra_pdf <- function(zumbis_capturados){
     }
     n_paginas <- length(zumbis_capturados[[1]])
     df_zumbis_capturados <- zumbis <- gera_df_zumbis(n_paginas,df_zumbis_capturados)
-    write.xlsx(df_zumbis_capturados,"data/df_zumbis_capturados.xlsx", overwrite = TRUE)
-    write.table(df_zumbis_capturados, "data/df_zumbis_capturados.csv", col.names = c('ID','NOME','NASCIMENTO','GENERO'), sep = ";")
   }
   return(df_zumbis_capturados)
 }
@@ -124,8 +122,8 @@ coleta_signo <- function(df_zumbi_capturados){
       df_zumbi_capturados$Dia_Sem_Nas[i] <- 'Sabado'
     }
   }
-  
-  
+  write.xlsx(df_zumbis_capturados,"data/df_zumbis_capturados.xlsx", overwrite = TRUE)
+  write.table(df_zumbis_capturados, "data/df_zumbis_capturados.csv", col.names = c('ID','NOME','NASCIMENTO','GENERO'), sep = ";")
   return(df_zumbi_capturados)
 }
 
