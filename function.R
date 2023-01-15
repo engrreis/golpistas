@@ -14,8 +14,11 @@ desmembra_pdf <- function(zumbis_capturados){
       cat(tab, file = tab_name)
     }
     n_paginas <- length(zumbis_capturados[[1]])
-    df_zumbis_capturados <- zumbis <- gera_df_zumbis(n_paginas,df_zumbis_capturados)
+    df_zumbis_capturados <- gera_df_zumbis(n_paginas,df_zumbis_capturados)
   }
+  #INCONSISTENCIA SUPOSICAO ERRO DO DIGITACAO ALTRADO 1696 PARA 1996 	
+  #477   JOSE AUGUSTO DA SILVA  1696-06-22  M
+  df_zumbis_capturados$NASCIMENTO[477] <- "1996-06-22"
   return(df_zumbis_capturados)
 }
 
@@ -122,8 +125,10 @@ coleta_signo <- function(df_zumbi_capturados){
       df_zumbi_capturados$Dia_Sem_Nas[i] <- 'Sabado'
     }
   }
-  write.xlsx(df_zumbis_capturados,"data/df_zumbis_capturados.xlsx", overwrite = TRUE)
-  write.table(df_zumbis_capturados, "data/df_zumbis_capturados.csv", col.names = c('ID','NOME','NASCIMENTO','GENERO'), sep = ";")
+  
+
+  write.xlsx(df_zumbi_capturados,"data/df_zumbi_capturados.xlsx", overwrite = TRUE)
+  write.table(df_zumbi_capturados, "data/df_zumbi_capturados.csv", sep = ";")
   return(df_zumbi_capturados)
 }
 
@@ -149,7 +154,7 @@ signos <- function(nascimento){
     }
   }
   if(mes_nas == 5){
-    seq_tesse <- seq(01,20) 
+    seq_teste <- seq(01,20) 
     if(dia_nas %in% seq_teste){
       signo <- "Touro"
     }
@@ -276,4 +281,49 @@ signos <- function(nascimento){
   }
 return(signo)
 }
+
+estatisticas_zumbis <- function(df_zumbi_capturados){
+  #inconsistencias nos NASCIMENTOS ID 792, 443 ANO DE NASCIMENTO
+  #443 JOÃO PAULO DOS SANTOS 2023-01-01 M Capricornio Domingo 0 
+  #792 SAULO SILVA EVANGELISTA 2019-03-20 M Peixes Quarta 4
+  df_zumbi_capturados$Idade[792] <- NA
+  df_zumbi_capturados$Idade[443] <- NA
+  df_zumb <- na.omit(df_zumbi_capturados)
+  mulheres <- subset(df_zumb, df_zumb$GENERO == "F", select = c(Idade))
+  homens <- subset(df_zumb, df_zumb$GENERO == "M", select = c(Idade))
+  m_mais_velha <- max(mulheres$Idade)
+  m_mais_Nova <- min(mulheres$Idade)
+  h_mais_velho <- max(homens$Idade)
+  h_mais_Novo <- min(homens$Idade)
+  media_idade <- round(mean(df_zumb$Idade))
+  media_m <- round(mean(mulheres$Idade))
+  media_H <- round(mean(homens$Idade))
+  cat(yellow(" ----------------------------------------------------", "\n",
+             "|             | Mais velhos | Mais novos |  Média  | ", "\n",
+             "| Mulheres    |    ", m_mais_velha,"     |    ", m_mais_Nova,"    |  ",media_m,"   |\n",
+             "| Homens      |    ", h_mais_velho, "     |    ",h_mais_Novo,"    |  ",media_H,"   |\n",
+             "----------------------------------------------------","\n",
+             "   Média Idade Geral: ", media_idade,"\n",
+             "----------------------------------------------------","\n"))
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
